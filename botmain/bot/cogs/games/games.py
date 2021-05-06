@@ -41,6 +41,7 @@ class Games(commands.Cog):
     
     @commands.command(aliases=['hg'])
     async def hangman(self, ctx):
+        '''Play hangman'''
         await ctx.send('**Here is the link to know about** *Hangman*:')
         await ctx.send('<https://en.wikipedia.org/wiki/Hangman_(game)#Example_game>')
         '''Play Hangman'''
@@ -55,6 +56,7 @@ class Games(commands.Cog):
         await ctx.send('**Here is the link to know about** *Akinator*:')
         await ctx.send('<https://en.wikipedia.org/wiki/Akinator#Gameplay>')
         a = await ctx.send('**Now get ready for the game**')
+        time.sleep(1)
         await a.edit(content='Starting in 5 seconds')
         for i in range(4):
             await a.edit(content=4-i)
@@ -86,7 +88,7 @@ class Games(commands.Cog):
             white=ctx.author,
             black=member
         )
-        await game.start()
+        await game.start(ctx)
 
 
 
