@@ -7,7 +7,7 @@ from discord.ext import commands
 from discord.ext.commands.cooldowns import BucketType
 
 
-class Games(commands.Cog):
+class FunGames(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.bot.chatbot = bot.chatbot
@@ -77,4 +77,4 @@ class Games(commands.Cog):
 
 
 def setup(bot):
-    bot.add_cog(Games(bot))
+    bot.add_cog(FunGames(bot))

@@ -9,6 +9,8 @@ from discord.ext import commands, owoify
 from discord.ext.commands import command
 from gtts import gTTS
 from PIL import Image
+from asyncdagpi import ImageFeatures
+
 
 
 class Random(commands.Cog):
@@ -22,16 +24,17 @@ class Random(commands.Cog):
         lol = owoify.owoify(f"{text}")
         await ctx.send(lol)
         
-    '''       
+       
     @command()
     @commands.cooldown(1, 40, commands.BucketType.guild)
     async def magic(self, ctx, user: discord.Member=None):
         user = user or ctx.author
-        file = await self.bot.se.magic(f'{user.avatar_url}')
-        filea = discord.File(file, "floor.gif")
-        di = discord.Embed(title="Woah, **bakayaro phonaryo** is cool :sunglasses:",  description="I just got you a filter, you like?")
-        di.set_image(url="attachment://floor.gif")
-        await ctx.send(file=filea, embed=di)
+        url = str(user.avatar_url_as(format="png", size=1024))
+        img = await self.bot.dagpi.image_process(ImageFeatures.magik(), url)
+        e2file = discord.File(fp=img.image, filename=f"magik.{img.format}")
+        e = discord.Embed(title="Magik!")
+        e.set_image(url=f"attachment://magik.{img.format}")
+        await ctx.send(embed=e, file=e2file)
         
     @magic.error
     async def magic_handler(self, ctx, error):
@@ -43,7 +46,7 @@ class Random(commands.Cog):
                 title=f"Cooldown left - {round(left)}", color=discord.colour.Color.from_rgb(231, 84, 128))
             await msg.edit(content="", embed=e)
             
-    
+    '''
     @command()
     @commands.cooldown(1, 40, commands.BucketType.guild)
     async def braille(self, ctx, user: discord.Member=None):

@@ -18,6 +18,7 @@ from pretty_help import PrettyHelp
 
 from botmain.bot.lib.util.post_user_stats import PostStats
 from pypresence import Presence
+import ast
 
 
 # from .bot.help import Help
@@ -40,8 +41,7 @@ dotenv_file = os.path.join(".env")
 def token_get(tokenname):
     if os.path.isfile(dotenv_file):
         dotenv.load_dotenv(dotenv_file)
-        tokenname = False if tokenname == 'LOCAL' else tokenname
-    return os.environ.get(tokenname).strip('\n') if tokenname else tokenname.strip('\n')
+    return os.environ.get(tokenname, 'False').strip('\n')
 
 TOKEN = token_get('TOKEN')
 topastoken = token_get('TOPASTOKEN')
@@ -107,7 +107,6 @@ posting = PostStats(bot)
 
 @bot.event
 async def on_ready():
-    await bot.change_presence(status=discord.Status.idle, activity=discord.Activity(type=discord.ActivityType.watching, name='over Naruto'))
     cog_dir = Path(__file__).resolve(strict=True).parent / join('botmain','bot','cogs')
     for filename in os.listdir(cog_dir):
         if os.path.isdir(cog_dir / filename):
@@ -128,6 +127,7 @@ async def on_ready():
 
     await posting.post_guild_stats_all()
     await stats.send(embed=e)
+    await bot.change_presence(status=discord.Status.idle, activity=discord.Activity(type=discord.ActivityType.watching, name='over Naruto'))
 
 @bot.event
 async def on_command_error(ctx, error):
@@ -231,20 +231,22 @@ except:
 #     ipc1.start()
 # except:
 #     pass
-client_id = '779559821162315787'
-RPC = Presence(client_id)
-RPC.connect()
-RPC.update(
-    state="火 Minato Namikaze 火", 
-    large_image="img_9692",
-    small_image="oqy9h2m",
-    details ="Konichiwa, myself Minato Namikaze, \n Konohagakure Yondaime Hokage, \n\n I try my best to do every work as a Hokage",
-    large_text="Minato Namikaze | 波風ミナト",
-    small_text="Minato Namikaze",
-    buttons=[{"label": "Invite", "url": "https://discord.com/oauth2/authorize?client_id=779559821162315787&permissions=8&scope=bot%20applications.commands"},
-             {"label": "Website", "url": 'https://dhruvacube.github.io/yondaime-hokage/'}
-             ]
-)
+if ast.literal_eval(token_get('LOCAL')):
+    client_id = '779559821162315787'
+    RPC = Presence(client_id)
+    RPC.connect()
+    RPC.update(
+        state="火 Minato Namikaze 火", 
+        large_image="img_9692",
+        small_image="oqy9h2m",
+        details ="Konichiwa, myself Minato Namikaze, \n Konohagakure Yondaime Hokage, \n\n I try my best to do every work as a Hokage",
+        large_text="Minato Namikaze | 波風ミナト",
+        small_text="Minato Namikaze",
+        buttons=[{"label": "Invite", "url": "https://discord.com/oauth2/authorize?client_id=779559821162315787&permissions=8&scope=bot%20applications.commands"},
+                {"label": "Website", "url": 'https://dhruvacube.github.io/yondaime-hokage/'}
+                ]
+    )
+
 try:
     bot.run(TOKEN)
 except RuntimeError:

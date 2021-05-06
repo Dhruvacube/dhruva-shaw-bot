@@ -145,19 +145,6 @@ class ImageManipulation(commands.Cog, name="Image Manipulation"):
         await ctx.send(file=e2file, embed=e)
 
     @commands.command()
-    async def magik(self, ctx, member: discord.Member = None):
-        '''See yourself the magic! '''
-        if member is None:
-            member = ctx.author
-
-        url = str(member.avatar_url_as(format="png", size=1024))
-        img = await self.bot.dagpi.image_process(ImageFeatures.magik(), url)
-        e2file = discord.File(fp=img.image, filename=f"magik.{img.format}")
-        e = discord.Embed(title="Here You Go! Filter used is magik!")
-        e.set_image(url=f"attachment://magik.{img.format}")
-        await ctx.send(file=e2file, embed=e)
-
-    @commands.command()
     async def wanted(self, ctx, member: discord.Member = None):
         '''Get yourself or someone listed in Bingo Book'''
         if member is None:

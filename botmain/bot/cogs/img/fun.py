@@ -7,6 +7,8 @@ import time
 import discord
 from discord.ext import commands
 from discord_slash import cog_ext
+from asyncdagpi import ImageFeatures
+
 
 class Fun(commands.Cog):
     def __init__(self, bot):
@@ -80,15 +82,25 @@ class Fun(commands.Cog):
             desc=f'** <@{ctx.author.id}> slaps {member.mention} !!! Damm! **'
         else:
             desc=f'** <@{ctx.author.id}> slaps themselves !!! LOL! **'
-        onlyfiles = [f for f in listdir(join(self.DEFAULT_GIF_LIST_PATH ,'slap'))]
+        import random
+        if member == '' or random.choice([True,False]):
+            onlyfiles = [f for f in listdir(join(self.DEFAULT_GIF_LIST_PATH ,'slap'))]
 
 
-        embed = discord.Embed(description=desc, timestamp=datetime.datetime.utcnow())
-        image_name=random.choice(onlyfiles)
+            embed = discord.Embed(description=desc, timestamp=datetime.datetime.utcnow())
+            image_name=random.choice(onlyfiles)
 
-        file = discord.File(join(self.DEFAULT_GIF_LIST_PATH,'slap',image_name), filename=image_name)
-        embed.set_image(url=f"attachment://{image_name}")
-        await ctx.send(file=file,embed=embed)
+            file = discord.File(join(self.DEFAULT_GIF_LIST_PATH,'slap',image_name), filename=image_name)
+            embed.set_image(url=f"attachment://{image_name}")
+            await ctx.send(file=file,embed=embed)
+        else:
+            user = member
+            url = str(user.avatar_url_as(format="png", size=1024))
+            img = await self.bot.dagpi.image_process(ImageFeatures.slap(), url2=str(ctx.author.avatar_url_as(format="png", size=1024)),url=url)
+            e2file = discord.File(fp=img.image, filename=f"slap.{img.format}")
+            e = discord.Embed(description=desc)
+            e.set_image(url=f"attachment://slap.{img.format}")
+            await ctx.send(embed=e, file=e2file)
 
 
     #hug
@@ -180,6 +192,19 @@ class Fun(commands.Cog):
         file = discord.File(join(self.DEFAULT_GIF_LIST_PATH,'party',image_name), filename=image_name)
         embed.set_image(url=f"attachment://{image_name}")
         await ctx.send(file=file,embed=embed)
+    
+    @commands.command(usage='<member.mention>')
+    async def pat(self, ctx, member: discord.Member = None):
+        '''Pat someone, UwU!'''
+        if member is None:
+            member = ctx.author
+
+        url = str(member.avatar_url_as(format="png", size=1024))
+        img = await self.bot.dagpi.image_process(ImageFeatures.petpet(), url)
+        e2file = discord.File(fp=img.image, filename=f"petpet.{img.format}")
+        e = discord.Embed(title="UwU Pat!")
+        e.set_image(url=f"attachment://petpet.{img.format}")
+        await ctx.send(file=e2file, embed=e)
 
 def setup(bot):
     bot.add_cog(Fun(bot))
